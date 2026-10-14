@@ -31,7 +31,7 @@ Add it to the category list in the top-level [README.md](./README.md).
 
 ## Duplicate checking
 
-`scripts/check_duplicates.py` runs automatically in CI (`.github/workflows/duplicate-check.yml`) on every PR. It compares added/changed lines against the rest of the repo and flags **exact** and **whitespace-only** duplicates, both against `main` and within the PR itself — it's a line-based text comparison, not a semantic check. It is not meant to be run standalone locally (it reads the PR diff via the GitHub API).
+`scripts/check_duplicates.py` runs automatically in CI (`.github/workflows/duplicate-check.yml`) on every PR. It compares added/changed lines in `.txt` payload files against every other `.txt` payload file in the repo, and flags **exact** and **whitespace-only** duplicates — both against `main` and within the PR itself. It's a line-based text comparison scoped to payload files, not a semantic check and not a check of Markdown/documentation content. It is not meant to be run standalone locally (it reads the PR diff via the GitHub API).
 
 ## Pull requests
 

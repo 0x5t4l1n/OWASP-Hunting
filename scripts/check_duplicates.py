@@ -19,6 +19,7 @@ from typing import Dict, Iterable, List, Optional, Tuple
 
 COMMENT_PREFIXES = ("#",)
 TEXT_FILE_SIZE_LIMIT = 2 * 1024 * 1024
+PAYLOAD_FILE_SUFFIX = ".txt"
 
 
 @dataclass(frozen=True)
@@ -124,7 +125,7 @@ def build_base_indexes(repo_root: Path) -> Tuple[Dict[str, List[Location]], Dict
     strict_index: Dict[str, List[Location]] = defaultdict(list)
     ws_index: Dict[str, List[Location]] = defaultdict(list)
 
-    for file_path in repo_root.rglob("*"):
+    for file_path in repo_root.rglob(f"*{PAYLOAD_FILE_SUFFIX}"):
         if not file_path.is_file():
             continue
         if ".git" in file_path.parts:
@@ -266,6 +267,8 @@ def collect_pr_changes(
         status = file_info.get("status")
         filename = file_info.get("filename")
         if not filename:
+            continue
+        if not filename.endswith(PAYLOAD_FILE_SUFFIX):
             continue
         if status not in {"added", "modified", "renamed", "copied", "changed"}:
             continue
