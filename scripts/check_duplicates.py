@@ -437,20 +437,13 @@ def find_bot_comment_id(api_base: str, owner_repo: str, pr_number: int, token: s
     return None
 
 
-def upsert_pr_comment(
-    api_base: str,
-    owner_repo: str,
-    pr_number: int,
-    token: str,
-    body: str,
-    only_update_existing: bool = False,
-) -> None:
+def upsert_pr_comment(api_base: str, owner_repo: str, pr_number: int, token: str, body: str) -> None:
     try:
         existing_id = find_bot_comment_id(api_base, owner_repo, pr_number, token)
         if existing_id:
             url = f"{api_base}/repos/{owner_repo}/issues/comments/{existing_id}"
             api_mutate_request(url, token, "PATCH", {"body": body})
-        elif not only_update_existing:
+        else:
             url = f"{api_base}/repos/{owner_repo}/issues/{pr_number}/comments"
             api_mutate_request(url, token, "POST", {"body": body})
     except RuntimeError as exc:
@@ -511,15 +504,12 @@ def main() -> int:
 
     print("No duplicate payload/content entries were detected in PR additions/changes.")
     print(f"Checked {len(candidates)} normalized entries from added/modified files.")
-    # Only touch an existing bot comment (to mark it resolved); never post a
-    # fresh "all clear" comment on a PR that never had a duplicate flagged.
     upsert_pr_comment(
         api_base,
         repository,
         int(pr_number),
         token,
         build_success_comment_body(len(candidates)),
-        only_update_existing=True,
     )
     return 0
 
