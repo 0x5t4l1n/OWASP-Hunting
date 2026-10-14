@@ -189,6 +189,12 @@ def remove_base_occurrences(
             ws_index.pop(key, None)
 
 
+class GithubApiError(RuntimeError):
+    def __init__(self, status_code: int, message: str) -> None:
+        super().__init__(message)
+        self.status_code = status_code
+
+
 def api_request(url: str, token: str) -> dict:
     req = urllib.request.Request(url)
     req.add_header("Accept", "application/vnd.github+json")
@@ -199,7 +205,7 @@ def api_request(url: str, token: str) -> dict:
             return json.loads(response.read().decode("utf-8"))
     except urllib.error.HTTPError as exc:
         body = exc.read().decode("utf-8", errors="replace")
-        raise RuntimeError(f"GitHub API request failed ({exc.code}) for {url}: {body}") from exc
+        raise GithubApiError(exc.code, f"GitHub API request failed ({exc.code}) for {url}: {body}") from exc
 
 
 def api_mutate_request(url: str, token: str, method: str, payload: dict) -> dict:
@@ -215,7 +221,7 @@ def api_mutate_request(url: str, token: str, method: str, payload: dict) -> dict
             return json.loads(body) if body else {}
     except urllib.error.HTTPError as exc:
         body = exc.read().decode("utf-8", errors="replace")
-        raise RuntimeError(f"GitHub API request failed ({exc.code}) for {url}: {body}") from exc
+        raise GithubApiError(exc.code, f"GitHub API request failed ({exc.code}) for {url}: {body}") from exc
 
 
 def paginated_request(url: str, token: str) -> List[dict]:
@@ -446,11 +452,35 @@ def upsert_pr_comment(api_base: str, owner_repo: str, pr_number: int, token: str
         else:
             url = f"{api_base}/repos/{owner_repo}/issues/{pr_number}/comments"
             api_mutate_request(url, token, "POST", {"body": body})
-    except RuntimeError as exc:
+    except GithubApiError as exc:
         # Never fail the whole check just because commenting failed (e.g. missing
         # permissions on a fork-originated event) — the job's pass/fail status
         # from stdout/exit code is still authoritative.
         print(f"::warning::Could not post PR comment: {exc}")
+
+
+DUPLICATE_LABEL = "duplicate"
+
+
+def set_duplicate_label(api_base: str, owner_repo: str, pr_number: int, token: str, has_duplicates: bool) -> None:
+    """Apply or remove the 'duplicate' label based on actual detection results.
+
+    This is the only place that touches the 'duplicate' label — it is never
+    inferred from changed file paths (see .github/labeler.yml).
+    """
+    try:
+        if has_duplicates:
+            url = f"{api_base}/repos/{owner_repo}/issues/{pr_number}/labels"
+            api_mutate_request(url, token, "POST", {"labels": [DUPLICATE_LABEL]})
+        else:
+            url = f"{api_base}/repos/{owner_repo}/issues/{pr_number}/labels/{DUPLICATE_LABEL}"
+            try:
+                api_mutate_request(url, token, "DELETE", {})
+            except GithubApiError as exc:
+                if exc.status_code != 404:  # 404 just means it wasn't set — fine
+                    raise
+    except GithubApiError as exc:
+        print(f"::warning::Could not update '{DUPLICATE_LABEL}' label: {exc}")
 
 
 def main() -> int:
@@ -500,6 +530,7 @@ def main() -> int:
         upsert_pr_comment(
             api_base, repository, int(pr_number), token, build_duplicate_comment_body(duplicates)
         )
+        set_duplicate_label(api_base, repository, int(pr_number), token, has_duplicates=True)
         return 1
 
     print("No duplicate payload/content entries were detected in PR additions/changes.")
@@ -511,6 +542,7 @@ def main() -> int:
         token,
         build_success_comment_body(len(candidates)),
     )
+    set_duplicate_label(api_base, repository, int(pr_number), token, has_duplicates=False)
     return 0
 
 
