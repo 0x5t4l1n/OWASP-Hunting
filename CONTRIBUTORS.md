@@ -19,24 +19,10 @@ This page is automatically updated to recognize everyone who has contributed to 
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/HARSHITHA-SREE">
-            <img src="https://avatars.githubusercontent.com/u/185629164?v=4" width="100;" alt="HARSHITHA-SREE"/>
+        <a href="https://github.com/mamicidal">
+            <img src="https://avatars.githubusercontent.com/u/112129498?v=4" width="100;" alt="mamicidal"/>
             <br />
-            <sub><b>HARSHITHA-SREE</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/reginaldalfret">
-            <img src="https://avatars.githubusercontent.com/u/190122957?v=4" width="100;" alt="reginaldalfret"/>
-            <br />
-            <sub><b>reginaldalfret</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/Vimalraj-R">
-            <img src="https://avatars.githubusercontent.com/u/161675933?v=4" width="100;" alt="Vimalraj-R"/>
-            <br />
-            <sub><b>Vimalraj-R</b></sub>
+            <sub><b>mamicidal</b></sub>
         </a>
     </td></tr>
 </table>
