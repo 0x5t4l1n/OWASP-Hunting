@@ -35,6 +35,23 @@ Add it to the category list in the top-level [README.md](./README.md).
 
 The bot always comments directly on the PR with the result: if a duplicate is found, it lists each entry, its location in your PR, and where it already exists; if not, it confirms no duplicates were found. It updates that same comment on every push instead of piling up new ones.
 
+The bot also applies or removes the `duplicate` label based on this same result — it's the only thing that touches that label; it's never applied from file paths alone.
+
+## Automatic labels
+
+`.github/workflows/labeler.yml` applies labels based on which files a PR changes, using `.github/labeler.yml`:
+
+| Label | Applied when |
+|---|---|
+| `new-payload` | A `.txt` payload file is added or changed |
+| `documentation` | Any `.md` file changes (root docs or a category README) |
+| `maintenance` | Changes under `.github/workflows/`, `.github/labeler.yml`, `scripts/`, or `.gitignore` |
+| `new-category` | Every changed file sits inside a top-level directory that isn't already a known category — i.e. the PR introduces a new one |
+| `duplicate` | Applied/removed only by the Duplicate Payload Check workflow above — never by the labeler |
+| `needs-review` | Not automated — no file path reliably implies a PR needs review (every PR does), so this is left to maintainers |
+
+`new-payload`, `documentation`, `new-category`, and `duplicate` already exist as repository labels and are reused as-is. **`maintenance` does not exist yet and must be created manually** in the repo's Labels settings before the labeler workflow can apply it.
+
 ## Pull requests
 
 Every PR should state: what changed, why it's useful, which category it affects, whether you checked for duplicates, what validation you did, and any sources/references. Payloads are never executed in CI or by any project tooling.
