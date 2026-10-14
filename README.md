@@ -4,7 +4,7 @@
 
 An open-source security testing and vulnerability research reference for security researchers, penetration testers, bug bounty hunters, and developers. [OWASP Incubator Project](https://owasp.org/projects/hunting).
 
-![OWASP Hunting project demonstration](https://owasp.org/media/project-media/projects/b84eda38-4983-4ba8-809c-388a73899ad4/gifs/1791223141233-aq8pfqpasq.gif?dpl=dpl_3j4eq6mqtrwFMk72RayntYttGhDS)
+![OWASP Hunting banner](.github/assets/banner.png)
 
 > A curated reference of testing payloads, attack vectors, and methodology notes — **not** an automated scanner or exploit framework. Nothing here runs against a target on its own.
 
