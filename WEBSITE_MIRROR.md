@@ -11,7 +11,7 @@ The workflow runs only for pushes to `website` or manual dispatch **from `websit
 
 ## Current destination state
 
-As checked on 2026-10-15, `docs-hunting` has only a `main` branch. Its repository currently publishes `hunting.0d4y.dev` through **GitHub Pages** from `main`, and its tracked workflow is `.github/workflows/deploy.yml`. No `netlify.toml` was present, and a Netlify site connected to this repository could not be verified. The mirror is therefore prepared for `main`; connect Netlify to `docs-hunting:main` if Netlify deployment is the desired final step. The mirror does not change Netlify settings or disable the existing GitHub Pages workflow.
+As checked on 2026-10-15, `docs-hunting` has only a `main` branch. Its repository also publishes `hunting.0d4y.dev` through **GitHub Pages** from `main`, and its tracked workflow is `.github/workflows/deploy.yml`. No `netlify.toml` was present. The destination owner reports that the repository is connected to Netlify, but the connected Netlify account available during setup could not verify that site's settings or deployments. The mirror is prepared for `main` and does not change Netlify settings or disable the existing GitHub Pages workflow.
 
 If Netlify uses a different production branch, update the destination checkout `ref`, push ref, and concurrency group in the sync workflow before enabling it.
 
@@ -36,7 +36,7 @@ The source's `src/lib/site-variant.ts` selects the OWASP GitHub Pages URL and ba
 
 1. Create a **dedicated fine-grained personal access token** with resource owner `th30d4y`, selected repository `docs-hunting`, and repository permission **Contents: Read and write**. GitHub includes Metadata: Read automatically. Give it an expiration and rotate it before expiry.
 2. In `OWASP/OWASP-Hunting`, open **Settings → Secrets and variables → Actions → New repository secret**. Name it `DOCS_SYNC_TOKEN` and paste the token there. Do not add the token to source files, PR text, or workflow logs. The source repository's `GITHUB_TOKEN` retains only `contents: read`.
-3. Confirm the destination branch and hosting settings. If Netlify is used, connect `th30d4y/docs-hunting` and confirm its production branch is `main`, with its existing build command and publish directory. This workflow does not configure Netlify.
+3. Confirm that the existing Netlify connection for `th30d4y/docs-hunting` builds `main`, with its existing build command and publish directory. This workflow does not configure Netlify.
 4. Review and merge the setup change into `website` only after the secret and destination branch are ready. That merge triggers the first sync. A manual run must select the `website` ref.
 
 The sync uses the token for a destination checkout and for a single non-force `git push`. It stores no credential in Git configuration and uses a temporary askpass helper so the token is not included in a command line or printed in logs.
