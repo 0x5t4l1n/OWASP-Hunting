@@ -9,6 +9,8 @@ Contributor fork → PR into OWASP-Hunting:website → merge
 
 The workflow runs only for pushes to `website` or manual dispatch **from `website`** in `OWASP/OWASP-Hunting`. Pull request events cannot access the destination token or run the sync job. The destination is never force-pushed or rebased.
 
+The OWASP GitHub Pages URL forwards browser visitors to `https://hunting.0d4y.dev/`, preserving the route, query, and fragment. The forwarding script runs only on `owasp.github.io` and is included only in the OWASP build; the deployment mirror does not redirect to itself. GitHub Pages serves this as a browser redirect, so it requires JavaScript.
+
 ## Current destination state
 
 As checked on 2026-10-15, `docs-hunting` has only a `main` branch. Its repository also publishes `hunting.0d4y.dev` through **GitHub Pages** from `main`, and its tracked workflow is `.github/workflows/deploy.yml`. No `netlify.toml` was present. The destination owner reports that the repository is connected to Netlify, but the connected Netlify account available during setup could not verify that site's settings or deployments. The mirror is prepared for `main` and does not change Netlify settings or disable the existing GitHub Pages workflow.

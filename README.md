@@ -65,7 +65,7 @@ The payload collection is plain Markdown and text files. Read a category's `READ
 
 ## Website
 
-The documentation website lives on the [`website`](https://github.com/OWASP/OWASP-Hunting/tree/website) branch and publishes at [owasp.github.io/OWASP-Hunting](https://owasp.github.io/OWASP-Hunting/). To build it locally on that branch:
+The documentation website lives on the [`website`](https://github.com/OWASP/OWASP-Hunting/tree/website) branch. Its primary URL is [hunting.0d4y.dev](https://hunting.0d4y.dev/); the [OWASP GitHub Pages URL](https://owasp.github.io/OWASP-Hunting/) forwards visitors there. To build it locally on that branch:
 
 ```bash
 npm ci
