@@ -77,6 +77,8 @@ python3 scripts/validate_website_export.py
 
 The static site is generated in `out/`. Pushes to `website` deploy through [the GitHub Pages workflow](.github/workflows/deploy-website.yml). The original website's README and attribution are preserved in [`website-source/`](website-source/ATTRIBUTION.md).
 
+To improve the site, follow the [website contribution guide](./WEBSITE_CONTRIBUTING.md) and target the `website` branch in your pull request.
+
 ## Contributing
 
 See **[CONTRIBUTING.md](./CONTRIBUTING.md)** — workflow, payload standards, PR requirements, and the [AI-assisted contribution policy](./CONTRIBUTING.md#ai-assisted-contributions). This project does not run any AI provider internally; the policy covers contributor AI use only.

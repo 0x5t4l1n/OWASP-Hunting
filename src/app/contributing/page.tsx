@@ -8,7 +8,7 @@ import { ExternalLink, Plus } from "lucide-react";
 
 export const metadata = {
   title: "Contributing",
-  description: "How to contribute to the OWASP Hunting project. Guidelines for adding payloads, creating new categories, and submitting pull requests.",
+  description: "How to contribute to the OWASP Hunting website and payload collection, including the correct pull request branches.",
 };
 
 export default function ContributingPage() {
@@ -68,9 +68,31 @@ export default function ContributingPage() {
             <li><strong>Documentation</strong> — Improve README files and category descriptions</li>
             <li><strong>Bug Fixes</strong> — Correct errors in existing payloads or documentation</li>
             <li><strong>Organization</strong> — Improve structure and consistency</li>
+            <li><strong>Website</strong> — Improve pages, design, accessibility, and search</li>
           </ul>
 
-          <h2 id="guidelines">Contribution Guidelines</h2>
+          <h2 id="website-contributions">Contributing to this website</h2>
+          <p>
+            Website changes start from the <code>website</code> branch and use <code>website</code> as the pull request base. The site is published from that branch after a change is merged.
+          </p>
+          <ol>
+            <li>Fork the repository and create a focused branch from the latest <code>website</code> branch.</li>
+            <li>Edit the relevant files in <code>src/</code> or <code>public/</code> and review the page locally.</li>
+            <li>Run TypeScript, lint, build, and static export validation.</li>
+            <li>Open a pull request to <code>OWASP/OWASP-Hunting:website</code>.</li>
+          </ol>
+          <p>
+            Read the{" "}
+            <a href={`${SITE_CONFIG.upstreamRepo}/blob/website/WEBSITE_CONTRIBUTING.md`} target="_blank" rel="noopener noreferrer">
+              complete website contribution guide
+            </a>{" "}
+            for the commands, file map, GitHub Pages requirements, and PR checklist. Payload collection changes follow the{" "}
+            <a href={`${SITE_CONFIG.upstreamRepo}/blob/main/CONTRIBUTING.md`} target="_blank" rel="noopener noreferrer">
+              general contribution guide
+            </a>.
+          </p>
+
+          <h2 id="guidelines">Payload Contribution Guidelines</h2>
           <ul>
             <li><strong>Quality over quantity</strong> — Well-documented, tested payloads over raw dumps</li>
             <li><strong>Clear documentation</strong> — Each payload should be clearly explained in context</li>
@@ -113,7 +135,8 @@ another_payload`}
             language="text"
           />
 
-          <h2 id="submission-process">Submission Process</h2>
+          <h2 id="submission-process">Payload Submission Process</h2>
+          <p>The following steps submit payload collection changes to <code>main</code>.</p>
 
           <h3 id="fork-the-repo">1. Fork the upstream repository</h3>
           <CodeBlock
@@ -147,7 +170,7 @@ git push origin add-xss-payloads`}
             <li>References to any relevant sources or documentation</li>
           </ul>
 
-          <h2 id="quality-standards">Quality Standards</h2>
+          <h2 id="quality-standards">Payload Quality Standards</h2>
           <p>Before submitting, verify:</p>
           <ul>
             <li>Payloads are properly formatted</li>
