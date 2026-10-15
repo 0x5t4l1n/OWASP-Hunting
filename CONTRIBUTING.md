@@ -36,7 +36,7 @@ The documentation website at [hunting.0d4y.dev](https://hunting.0d4y.dev/) is ma
    ```
 
    For a visual change, also use `npm run dev` and review `http://localhost:3000/OWASP-Hunting/` in a browser.
-4. Push your branch to your fork and open a PR with **base repository `OWASP/OWASP-Hunting` and base branch `website`**. Describe what changed and how you checked it. A merged website PR deploys the OWASP site and automatically syncs website content to `docs-hunting/main`; contributors should propose website changes here, not in the deployment mirror.
+4. Push your branch to your fork and open a PR with **base repository `OWASP/OWASP-Hunting` and base branch `website`**. Describe what changed and how you checked it. Add the `Website` label, or ask a maintainer to add it if you cannot edit PR labels. A merged website PR deploys the OWASP site and automatically syncs website content to `docs-hunting/main`; contributors should propose website changes here, not in the deployment mirror.
 
 If the change also updates a canonical payload file, submit that payload change separately against `main` using the workflow below.
 
@@ -79,6 +79,8 @@ The bot also applies or removes the `duplicate` label based on this same result 
 | `new-category` | Every changed file sits inside a top-level directory that isn't already a known category — i.e. the PR introduces a new one |
 | `duplicate` | Applied/removed only by the Duplicate Payload Check workflow above — never by the labeler |
 | `needs-review` | Not automated — no file path reliably implies a PR needs review (every PR does), so this is left to maintainers |
+
+The `Website` label identifies website-related PRs. It is applied manually; the labeler does not currently assign it.
 
 `new-payload`, `documentation`, `new-category`, and `duplicate` already exist as repository labels and are reused as-is. **`maintenance` does not exist yet and must be created manually** in the repo's Labels settings before the labeler workflow can apply it.
 
