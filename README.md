@@ -61,7 +61,21 @@ cat SQL-Injection/README.md
 grep -r "onerror=" XSS/xss-payloads.txt
 ```
 
-No build or install step — it's plain Markdown and text files. Read a category's `README.md` first; it gives the context the payload list assumes.
+The payload collection is plain Markdown and text files. Read a category's `README.md` first; it gives the context the payload list assumes.
+
+## Website
+
+The documentation website lives on the [`website`](https://github.com/OWASP/OWASP-Hunting/tree/website) branch and publishes at [owasp.github.io/OWASP-Hunting](https://owasp.github.io/OWASP-Hunting/). To build it locally on that branch:
+
+```bash
+npm ci
+npx tsc --noEmit
+npm run lint
+npm run build
+python3 scripts/validate_website_export.py
+```
+
+The static site is generated in `out/`. Pushes to `website` deploy through [the GitHub Pages workflow](.github/workflows/deploy-website.yml). The original website's README and attribution are preserved in [`website-source/`](website-source/ATTRIBUTION.md).
 
 ## Contributing
 
