@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import { SITE_CONFIG } from "@/lib/navigation";
 import "./globals.css";
 
@@ -72,6 +73,12 @@ export default function RootLayout({
         }}
       >
         {children}
+        {Boolean(SITE_CONFIG.basePath) && (
+          <Script
+            src={`${SITE_CONFIG.basePath}/redirect-to-primary.js`}
+            strategy="beforeInteractive"
+          />
+        )}
       </body>
     </html>
   );

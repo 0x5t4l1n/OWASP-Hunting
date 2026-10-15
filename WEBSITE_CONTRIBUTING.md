@@ -1,6 +1,6 @@
 # Contributing to the OWASP Hunting website
 
-This guide is for the documentation website at https://owasp.github.io/OWASP-Hunting/. Website changes are reviewed against the **`website` branch**. For new security payloads or changes to the canonical payload collection, use the [general contribution guide](./CONTRIBUTING.md) and target `main`.
+This guide is for the documentation website at https://hunting.0d4y.dev/. The OWASP GitHub Pages URL forwards visitors to that primary domain. Website changes are reviewed against the **`website` branch**. For new security payloads or changes to the canonical payload collection, use the [general contribution guide](./CONTRIBUTING.md) and target `main`.
 
 ## Find the right files
 
