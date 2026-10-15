@@ -10,7 +10,37 @@ This is the canonical contribution guide for the project.
 - No plagiarism — attribute sources where a payload comes from a specific writeup, CVE, or tool.
 - Don't submit a payload that is character-for-character or whitespace-only different from one that already exists. If it's a meaningful variant (different encoding, bypass, or context), say so in the PR.
 
-## Workflow
+## Contribute to the website (`website` branch)
+
+The documentation website at [hunting.0d4y.dev](https://hunting.0d4y.dev/) is maintained on the [`website` branch](https://github.com/OWASP/OWASP-Hunting/tree/website). The `main` branch holds the canonical payload collection. For website pages, design, navigation, search, or images, start from `website` and open a PR **into `website`**, even if GitHub suggests `main` by default.
+
+1. Fork this repository. For a new clone of your fork, create your working branch from the latest official `website` branch:
+
+   ```bash
+   git clone https://github.com/YOUR_USERNAME/OWASP-Hunting.git
+   cd OWASP-Hunting
+   git remote add upstream https://github.com/OWASP/OWASP-Hunting.git
+   git fetch upstream website
+   git switch -c docs/my-website-change upstream/website
+   ```
+
+2. Make a focused change in the website files (`src/app/`, `src/components/`, `src/lib/`, or `public/`). Follow the [full website contribution guide](https://github.com/OWASP/OWASP-Hunting/blob/website/WEBSITE_CONTRIBUTING.md) for the file map, accessibility guidance, and GitHub Pages base-path requirements.
+3. With Node.js 22, run the website checks before opening the PR:
+
+   ```bash
+   npm ci
+   npx tsc --noEmit
+   npm run lint
+   npm run build
+   python3 scripts/validate_website_export.py
+   ```
+
+   For a visual change, also use `npm run dev` and review `http://localhost:3000/OWASP-Hunting/` in a browser.
+4. Push your branch to your fork and open a PR with **base repository `OWASP/OWASP-Hunting` and base branch `website`**. Describe what changed and how you checked it. Add the `Website` label, or ask a maintainer to add it if you cannot edit PR labels. A merged website PR deploys the OWASP site and automatically syncs website content to `docs-hunting/main`; contributors should propose website changes here, not in the deployment mirror.
+
+If the change also updates a canonical payload file, submit that payload change separately against `main` using the workflow below.
+
+## Payload workflow (`main` branch)
 
 1. Fork the repo and create a focused branch (`add-xss-dom-payloads`, `new-category-graphql-injection`, etc.).
 2. Add/edit payloads in the right category directory, matching its existing format.
@@ -49,6 +79,8 @@ The bot also applies or removes the `duplicate` label based on this same result 
 | `new-category` | Every changed file sits inside a top-level directory that isn't already a known category — i.e. the PR introduces a new one |
 | `duplicate` | Applied/removed only by the Duplicate Payload Check workflow above — never by the labeler |
 | `needs-review` | Not automated — no file path reliably implies a PR needs review (every PR does), so this is left to maintainers |
+
+The `Website` label identifies website-related PRs. It is applied manually; the labeler does not currently assign it.
 
 `new-payload`, `documentation`, `new-category`, and `duplicate` already exist as repository labels and are reused as-is. **`maintenance` does not exist yet and must be created manually** in the repo's Labels settings before the labeler workflow can apply it.
 
