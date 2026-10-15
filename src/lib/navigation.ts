@@ -1,9 +1,11 @@
+import { SITE_VARIANT } from "@/lib/site-variant";
+
 export const SITE_CONFIG = {
   name: "Hunting",
   fullName: "OWASP Hunting",
   description: "Security Testing Resources & Payload Reference",
-  url: "https://owasp.github.io/OWASP-Hunting/",
-  basePath: "/OWASP-Hunting",
+  url: SITE_VARIANT.url,
+  basePath: SITE_VARIANT.basePath,
   upstreamRepo: "https://github.com/owasp/owasp-hunting",
   forkRepo: "https://github.com/0x5t4l1n/owasp-hunting",
   license: "MIT",

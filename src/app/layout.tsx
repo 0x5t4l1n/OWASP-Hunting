@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { SITE_CONFIG } from "@/lib/navigation";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -15,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://owasp.github.io/OWASP-Hunting/"),
+  metadataBase: new URL(SITE_CONFIG.url),
   title: {
     template: "%s — OWASP Hunting",
     default: "OWASP Hunting — Security Testing Documentation",
@@ -37,7 +38,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://owasp.github.io/OWASP-Hunting/",
+    url: SITE_CONFIG.url,
     siteName: "OWASP Hunting",
     title: "OWASP Hunting — Security Testing Documentation",
     description:
