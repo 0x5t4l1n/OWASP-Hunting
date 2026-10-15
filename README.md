@@ -10,7 +10,7 @@ An open-source security testing and vulnerability research reference for securit
 
 ## What's inside
 
-31 vulnerability categories, each a directory with a `README.md` (description, attack vectors, testing approach) and a `*-payloads.txt` file.
+32 vulnerability categories, each a directory with a `README.md` (description, attack vectors, testing approach) and a `*-payloads.txt` file.
 
 <details>
 <summary><strong>Browse all categories</strong></summary>
@@ -48,6 +48,7 @@ An open-source security testing and vulnerability research reference for securit
 | [Business Logic](./Business-Logic/) | Config & design |
 | [Weak Cryptography](./Weak-Cryptography/) | Config & design |
 | [Vulnerable Components](./Vulnerable-Components/) | Config & design |
+| [Clickjacking](./Clickjacking/) | Config & design |
 | [Tor-Based Attacks](./Tor-Based-Attacks/) | Network |
 
 </details>
