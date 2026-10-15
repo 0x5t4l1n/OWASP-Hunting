@@ -79,6 +79,8 @@ The static site is generated in `out/`. Pushes to `website` deploy through [the 
 
 To improve the site, follow the [website contribution guide](./WEBSITE_CONTRIBUTING.md) and target the `website` branch in your pull request.
 
+The [deployment mirror guide](./WEBSITE_MIRROR.md) explains the optional one-way sync from `website` to `th30d4y/docs-hunting` and its required destination token.
+
 ## Contributing
 
 See **[CONTRIBUTING.md](./CONTRIBUTING.md)** — workflow, payload standards, PR requirements, and the [AI-assisted contribution policy](./CONTRIBUTING.md#ai-assisted-contributions). This project does not run any AI provider internally; the policy covers contributor AI use only.
