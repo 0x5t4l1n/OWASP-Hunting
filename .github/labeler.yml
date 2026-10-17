@@ -50,6 +50,7 @@ new-category:
           - all-globs-to-all-files:
               - "!Authentication-Bypass/**"
               - "!Business-Logic/**"
+              - "!Cache-Poisoning/**"
               - "!Command-Injection/**"
               - "!CORS-Misconfiguration/**"
               - "!CSV-Injection/**"
