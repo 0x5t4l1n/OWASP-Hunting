@@ -20,3 +20,6 @@ Submit JavaScript code in various input points and observe if the code gets exec
 
 ## Payloads
 See `xss-payloads.txt` for a comprehensive list of XSS payloads.
+
+## Additional Payloads
+See `context-sanitizer-payloads.txt` for hTML, attribute, JavaScript and URL contexts; sanitizer, DOM clobbering, CSP and Trusted Types inputs. Select the section matching the target input context. Protocol fragments and claim replacements require the corresponding lab request or signed token; they are not universal standalone exploits.
