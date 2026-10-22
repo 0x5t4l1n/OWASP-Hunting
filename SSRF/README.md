@@ -16,3 +16,6 @@ Submit URLs pointing to internal resources, cloud metadata endpoints, or localho
 
 ## Payloads
 See `ssrf-payloads.txt` for a comprehensive list of SSRF payloads.
+
+## Additional Payloads
+See `advanced-ssrf-payloads.txt` for uRL parser variants, redirect/rebinding inputs and cloud metadata request headers/bodies. Select the section matching the target input context. Protocol fragments and claim replacements require the corresponding lab request or signed token; they are not universal standalone exploits.
