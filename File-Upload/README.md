@@ -73,4 +73,4 @@ See `file-upload-payloads.txt` for comprehensive payloads including:
 - Archive-based attacks
 
 ## Additional Payloads
-See `processing-storage-payloads.txt` for filename/MIME variants, archive generators, processing inputs and storage authorization requests. Select the section matching the target input context. Protocol fragments and claim replacements require the corresponding lab request or signed token; they are not universal standalone exploits.
+See `processing-storage-payloads.txt` for filename/MIME variants, archive generators, processing inputs and storage authorization requests. Select the section matching the target input context. Use disposable files and storage fixtures; verify processing results and access controls with the documented test accounts.

@@ -18,4 +18,4 @@ Test AI-powered chatbots, assistants, and applications that use Large Language M
 See `prompt-injection-payloads.txt` for a comprehensive list of prompt injection payloads.
 
 ## Additional Payloads
-See `indirect-agent-payloads.txt` for indirect document/tool-result injection, RAG poisoning, mock-tool boundaries, synthetic canary requests and multimodal input strings. Select the section matching the target input context. Protocol fragments and claim replacements require the corresponding lab request or signed token; they are not universal standalone exploits.
+See `indirect-agent-payloads.txt` for indirect document/tool-result injection, RAG poisoning, mock-tool boundaries, synthetic canary requests and multimodal input strings. Select the section matching the target input context. Use synthetic canaries and mock tools; compare the agent's actions with the permitted task and tool boundaries.
