@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import base64
 import difflib
+import html
 import json
 import os
 import re
@@ -129,6 +130,7 @@ def remove_base_occurrences(
     path: str,
     removed_entries: Iterable[Entry],
 ) -> None:
+    removed_entries = list(removed_entries)
     strict_counts: Counter[str] = Counter(entry.strict_key for entry in removed_entries)
     ws_counts: Counter[str] = Counter(entry.ws_key for entry in removed_entries)
 
@@ -148,13 +150,15 @@ def remove_base_occurrences(
             strict_index.pop(key, None)
 
     for key, count in ws_counts.items():
+        exact_counts = Counter(entry.strict_key for entry in removed_entries if entry.ws_key == key)
         if key not in ws_index:
             continue
         updated = []
         remaining = count
         for loc in ws_index[key]:
-            if remaining > 0 and loc.path == path:
+            if remaining > 0 and loc.path == path and exact_counts[loc.text] > 0:
                 remaining -= 1
+                exact_counts[loc.text] -= 1
             else:
                 updated.append(loc)
         if updated:
@@ -231,7 +235,7 @@ def get_file_content(api_base: str, owner_repo: str, path: str, ref: str, token:
     content = data.get("content")
     if not isinstance(content, str):
         raise RuntimeError(f"Missing payload content for {path} at {ref}")
-    decoded = base64.b64decode(content)
+    decoded = base64.b64decode("".join(content.split()), validate=True)
     if len(decoded) > TEXT_FILE_SIZE_LIMIT or not is_probably_text(decoded):
         raise RuntimeError(f"Cannot inspect payload file {path}: oversized or binary content")
     return decoded.decode("utf-8")
@@ -376,10 +380,13 @@ COMMENT_MARKER = "<!-- duplicate-payload-check-bot -->"
 
 
 def format_entry_for_markdown(text: str) -> str:
-    escaped = text.replace("`", "\\`")
-    if len(escaped) > 200:
-        escaped = escaped[:200] + "…"
-    return escaped
+    # HTML code tags avoid backtick delimiter collisions. Encode pipes as well
+    # so payloads and contributor-controlled paths cannot split table cells.
+    if len(text) > 200:
+        text = text[:200] + "..."
+    escaped = html.escape(text).replace("|", "&#124;").replace("`", "&#96;").replace("\\", "&#92;")
+    escaped = escaped.replace("\r", "&#13;").replace("\n", "&#10;")
+    return f"<code>{escaped}</code>"
 
 
 def build_duplicate_comment_body(duplicates: List[Duplicate]) -> str:
@@ -393,12 +400,19 @@ def build_duplicate_comment_body(duplicates: List[Duplicate]) -> str:
         "| # | Entry | New location | Already exists at | Type |",
         "|---|---|---|---|---|",
     ]
-    for idx, dup in enumerate(duplicates, start=1):
+    shown = 0
+    for idx, dup in enumerate(duplicates[:50], start=1):
         entry = format_entry_for_markdown(dup.entry)
-        lines.append(
-            f"| {idx} | `{entry}` | `{dup.new.path}:{dup.new.line}` "
-            f"| `{dup.existing.path}:{dup.existing.line}` | {dup.kind} |"
+        row = (
+            f"| {idx} | {entry} | {format_entry_for_markdown(f'{dup.new.path}:{dup.new.line}')} "
+            f"| {format_entry_for_markdown(f'{dup.existing.path}:{dup.existing.line}')} | {dup.kind} |"
         )
+        if sum(len(line) + 1 for line in lines) + len(row) > 58000:
+            break
+        lines.append(row)
+        shown += 1
+    if len(duplicates) > shown:
+        lines.append(f"\nShowing {shown} of {len(duplicates)} matches; see the workflow log for all matches.")
     lines.append("")
     lines.append("_Posted automatically by the Duplicate Payload Check workflow._")
     return "\n".join(lines)
@@ -416,7 +430,9 @@ def build_success_comment_body(checked_count: int) -> str:
 def find_bot_comment_id(api_base: str, owner_repo: str, pr_number: int, token: str) -> Optional[int]:
     url = f"{api_base}/repos/{owner_repo}/issues/{pr_number}/comments"
     for comment in paginated_request(url, token):
-        if COMMENT_MARKER in comment.get("body", ""):
+        if (comment.get("user", {}).get("login") == "github-actions[bot]"
+                and comment.get("user", {}).get("type") == "Bot"
+                and COMMENT_MARKER in (comment.get("body") or "")):
             return comment.get("id")
     return None
 

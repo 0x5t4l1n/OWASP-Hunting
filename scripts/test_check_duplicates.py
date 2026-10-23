@@ -1,4 +1,6 @@
 """Offline regression tests; never execute payloads or call GitHub."""
+import base64
+import binascii
 import tempfile
 import unittest
 from pathlib import Path
@@ -129,6 +131,82 @@ class DuplicateCheckTests(unittest.TestCase):
                  patch("builtins.print"):
                 self.assertEqual(checker.main(), expected)
                 self.assertEqual(label.call_args.kwargs["has_duplicates"], bool(expected))
+
+    def test_removal_preserves_other_whitespace_variant(self):
+        first = checker.Location("X/test.txt", 1, "payload  x")
+        second = checker.Location("X/test.txt", 2, "payload x")
+        strict = {first.text: [first], second.text: [second]}
+        ws = {"payload x": [first, second]}
+        checker.remove_base_occurrences(strict, ws, "X/test.txt", [checker.to_entry(second.text)])
+        self.assertEqual(ws["payload x"], [first])
+        self.assertNotIn(second.text, strict)
+
+    def test_removal_accepts_single_use_iterables(self):
+        loc = checker.Location("X/test.txt", 1, "payload")
+        strict, ws = {"payload": [loc]}, {"payload": [loc]}
+        checker.remove_base_occurrences(strict, ws, loc.path,
+                                        (checker.to_entry(t) for t in ["payload"]))
+        self.assertEqual((strict, ws), ({}, {}))
+
+    def test_comment_ignores_forged_markers_and_other_bots(self):
+        comments = [
+            {"id": 1, "body": checker.COMMENT_MARKER, "user": {"login": "contributor", "type": "User"}},
+            {"id": 2, "body": checker.COMMENT_MARKER, "user": {"login": "other[bot]", "type": "Bot"}},
+            {"id": 3, "body": None, "user": {"login": "github-actions[bot]", "type": "Bot"}},
+            {"id": 4, "body": checker.COMMENT_MARKER, "user": {"login": "github-actions[bot]", "type": "Bot"}},
+        ]
+        with patch.object(checker, "paginated_request", return_value=comments):
+            self.assertEqual(checker.find_bot_comment_id("api", "repo", 1, "token"), 4)
+
+    def test_markdown_handles_html_backticks_pipes_and_newlines(self):
+        rendered = checker.format_entry_for_markdown("`<tag>|x\ny")
+        self.assertEqual(rendered, "<code>&#96;&lt;tag&gt;&#124;x&#10;y</code>")
+
+    def test_comment_caps_rows_and_escapes_paths(self):
+        duplicate = checker.Duplicate("exact duplicate", "payload|`",
+            checker.Location("old|path", 1, "payload"), checker.Location("new|path", 2, "payload"))
+        comment = checker.build_duplicate_comment_body([duplicate] * 500)
+        rows = [line for line in comment.splitlines() if line.startswith("| ")]
+        self.assertEqual(len(rows), 51)  # Header plus 50 matches.
+        self.assertIn("Showing 50 of 500", comment)
+        self.assertIn("new&#124;path:2", comment)
+        self.assertLess(len(comment), 65536)
+
+    def test_comment_stays_below_api_limit_after_escaping(self):
+        duplicate = checker.Duplicate("exact duplicate", "|"*200,
+            checker.Location("|"*200, 1, "payload"), checker.Location("|"*200, 2, "payload"))
+        comment = checker.build_duplicate_comment_body([duplicate]*500)
+        self.assertLess(len(comment), 65536)
+        self.assertIn("of 500 matches", comment)
+
+    def test_invalid_base64_is_not_accepted_as_empty_content(self):
+        with patch.object(checker, "api_request", return_value={"encoding": "base64", "content": "!!!!"}):
+            with self.assertRaises(binascii.Error):
+                checker.get_file_content("api", "repo", "X/test.txt", "sha", "token")
+
+    def test_wrapped_base64_content_is_supported(self):
+        encoded = base64.b64encode(b"payload").decode()
+        with patch.object(checker, "api_request", return_value={"encoding": "base64", "content": encoded[:4]+"\n"+encoded[4:]}):
+            self.assertEqual(checker.get_file_content("api", "repo", "X/test.txt", "sha", "token"), "payload")
+
+    def test_invalid_utf8_and_binary_content_fail(self):
+        for raw, error in [(b"\xff", UnicodeDecodeError), (b"\0", RuntimeError)]:
+            with self.subTest(raw=raw), patch.object(checker, "api_request", return_value={
+                    "encoding": "base64", "content": base64.b64encode(raw).decode()}):
+                with self.assertRaises(error):
+                    checker.get_file_content("api", "repo", "X/test.txt", "sha", "token")
+
+    def test_truncated_file_list_fails(self):
+        with patch.object(checker, "get_pr_files", return_value=[{}]*3000):
+            with self.assertRaisesRegex(RuntimeError, "truncated"):
+                checker.collect_pr_changes("api", "repo", 1, "head", "base", "token")
+
+    def test_comment_failure_does_not_change_duplicate_verdict(self):
+        with patch.object(checker, "find_bot_comment_id", return_value=None), \
+             patch.object(checker, "api_mutate_request", side_effect=checker.GithubApiError(403, "denied")), \
+             patch("builtins.print") as output:
+            checker.upsert_pr_comment("api", "repo", 1, "token", "result")
+            self.assertIn("Could not post PR comment", output.call_args.args[0])
 
 
 if __name__ == "__main__":

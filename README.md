@@ -2,7 +2,9 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
-An open-source security testing and vulnerability research reference for security researchers, penetration testers, bug bounty hunters, and developers. [OWASP Incubator Project](https://owasp.org/projects/hunting).
+Version: **1.0.1** | [Changelog](./CHANGELOG.md)
+
+An open-source security testing and vulnerability research reference for security researchers, penetration testers, bug bounty hunters, and developers. [OWASP repository](https://github.com/OWASP/OWASP-Hunting).
 
 ![OWASP Hunting banner](.github/assets/banner.png)
 
@@ -89,4 +91,4 @@ MIT — see [LICENSE](./LICENSE). Copyright OWASP.
 
 ## Resources
 
-[Official project page](https://owasp.org/projects/hunting) · [OWASP Top 10](https://owasp.org/www-project-top-ten/) · [OWASP API Security Top 10](https://owasp.org/API-Security/editions/2023/en/0x00-header/) · [OWASP Testing Guide](https://owasp.org/www-project-web-security-testing-guide/)
+[Project repository](https://github.com/OWASP/OWASP-Hunting) · [OWASP Top 10](https://owasp.org/www-project-top-ten/) · [OWASP API Security Top 10](https://owasp.org/API-Security/editions/2023/en/0x00-header/) · [OWASP Testing Guide](https://owasp.org/www-project-web-security-testing-guide/)
