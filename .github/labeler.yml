@@ -1,9 +1,7 @@
 # Config for actions/labeler@v6 — https://github.com/actions/labeler
 #
 # Reuses existing repository labels; does not create new ones at runtime.
-# Labels used here ("new-payload", "new-category", "documentation") already
-# exist in the repo. "maintenance" does not exist yet and must be created
-# manually — see CONTRIBUTING.md.
+# Labels used here must exist in the repository before this workflow runs.
 #
 # "duplicate" is intentionally NOT configured here. It is applied/removed
 # only by the Duplicate Payload Check workflow when it actually detects a
@@ -32,6 +30,7 @@ maintenance:
           - ".github/labeler.yml"
           - "scripts/**"
           - ".gitignore"
+          - "VERSION"
 
 # A PR that introduces a new top-level category directory.
 #

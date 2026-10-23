@@ -90,7 +90,7 @@ Unreadable, invalid UTF-8, binary, oversized, or incomplete payload content caus
 
 The `Website` label identifies website-related PRs. It is applied manually; the labeler does not currently assign it.
 
-`new-payload`, `documentation`, `new-category`, and `duplicate` already exist as repository labels and are reused as-is. **`maintenance` does not exist yet and must be created manually** in the repo's Labels settings before the labeler workflow can apply it.
+The configured `new-payload`, `documentation`, `new-category`, `duplicate`, and `maintenance` labels exist in this repository. Fork maintainers must create these labels before enabling the workflows.
 
 ## Pull requests
 
@@ -117,7 +117,7 @@ Human validation: <what you personally reviewed or tested>
 
 ## Resources
 
-- [Official project page](https://owasp.org/projects/hunting)
+- [Project repository](https://github.com/OWASP/OWASP-Hunting)
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/)
 - [OWASP Testing Guide](https://owasp.org/www-project-web-security-testing-guide/)
 - [DISCLAIMER.md](./DISCLAIMER.md) — legal terms you agree to by contributing
