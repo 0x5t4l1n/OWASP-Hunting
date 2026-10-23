@@ -25,4 +25,4 @@ Web cache poisoning exploits the gap between what a cache treats as part of the 
 See `cache-poisoning-payloads.txt` for header-based probes and example cache-busting/keying tests.
 
 ## Additional Payloads
-See `cache-normalization-payloads.txt` for query/path normalization, header/cookie variants, cache-deception paths and escaped GET-body requests. Select the section matching the target input context. Protocol fragments and claim replacements require the corresponding lab request or signed token; they are not universal standalone exploits.
+See `cache-normalization-payloads.txt` for query/path normalization, header/cookie variants, cache-deception paths and escaped GET-body requests. Select the section matching the target input context. Use an isolated cache fixture, preserve request bytes and compare cache keys and responses with a clean control request.

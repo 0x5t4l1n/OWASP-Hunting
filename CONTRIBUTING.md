@@ -61,11 +61,19 @@ Add it to the category list in the top-level [README.md](./README.md).
 
 ## Duplicate checking
 
-`scripts/check_duplicates.py` runs automatically in CI (`.github/workflows/duplicate-check.yml`) on every PR. It compares added/changed lines in `.txt` payload files against every other `.txt` payload file in the repo, and flags **exact** and **whitespace-only** duplicates — both against `main` and within the PR itself. It's a line-based text comparison scoped to payload files, not a semantic check and not a check of Markdown/documentation content. It is not meant to be run standalone locally (it reads the PR diff via the GitHub API).
+`scripts/check_duplicates.py` runs automatically in CI (`.github/workflows/duplicate-check.yml`) on every PR. It compares added/changed lines in `.txt` payload files against the PR base branch and within the PR itself. Exact duplicates fail the check; whitespace-only matches are advisory because spacing can change payload behavior. Leading and trailing whitespace is preserved for exact comparison. This is a line-based text comparison, not a semantic check or a check of Markdown content. It reads complete file contents via the GitHub API and compares the PR merge base to its head, so it is not intended to run standalone locally.
 
-The bot always comments directly on the PR with the result: if a duplicate is found, it lists each entry, its location in your PR, and where it already exists; if not, it confirms no duplicates were found. It updates that same comment on every push instead of piling up new ones.
+The bot always comments directly on the PR with the result: if a match is found, it lists each entry, its actual line in your PR, and where it already exists; if not, it confirms no duplicates were found. It updates that same comment on every push instead of piling up new ones.
 
-The bot also applies or removes the `duplicate` label based on this same result — it's the only thing that touches that label; it's never applied from file paths alone.
+The bot applies the `duplicate` label when blocking exact duplicates are found and removes it otherwise, including when there are only advisory whitespace matches. This checker is the only automation that manages that label.
+
+Run the offline regression tests locally with:
+
+```bash
+python -m unittest discover -s scripts -p 'test_*.py' -v
+```
+
+Unreadable, invalid UTF-8, binary, oversized, or incomplete payload content causes an error rather than a successful partial check. Payloads are only read as text and are never executed.
 
 ## Automatic labels
 
