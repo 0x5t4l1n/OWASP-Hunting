@@ -75,6 +75,22 @@ python -m unittest discover -s scripts -p 'test_*.py' -v
 
 Unreadable, invalid UTF-8, binary, oversized, or incomplete payload content causes an error rather than a successful partial check. Payloads are only read as text and are never executed.
 
+## Claiming an issue
+
+Repository members and collaborators can claim an issue by commenting with the exact command:
+
+```text
+/take-pr
+```
+
+The command assigns the issue to the commenter. To remove your own assignment, comment:
+
+```text
+/remove-pr
+```
+
+These commands apply to issues, not pull requests. They only change the commenter's own assignment; they do not remove another contributor from an issue.
+
 ## Automatic labels
 
 `.github/workflows/labeler.yml` applies labels based on which files a PR changes, using `.github/labeler.yml`:
