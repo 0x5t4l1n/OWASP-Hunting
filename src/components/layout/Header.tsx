@@ -248,6 +248,7 @@ export function Header() {
         {/* Mobile nav dropdown */}
         {mobileOpen && (
           <div
+            className="mobile-only"
             style={{
               borderTop: "1px solid var(--color-line)",
               backgroundColor: "var(--color-surface)",
