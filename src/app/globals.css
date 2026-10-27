@@ -271,6 +271,11 @@ a.hvr-nav, button.hvr-nav { transition: color 0.15s, background-color 0.15s; }
   vertical-align: super;
 }
 
+/* Keep fragment targets below the sticky site header. */
+:where(h1, h2, h3, h4, section)[id] {
+  scroll-margin-top: 5rem;
+}
+
 /* Sidebar highlight */
 .nav-active {
   background-color: var(--color-accent-subtle);
