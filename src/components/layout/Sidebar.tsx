@@ -12,7 +12,7 @@ interface SidebarProps {
   className?: string;
 }
 
-function SidebarSection({ section }: { section: NavSection }) {
+function SidebarSection({ section, onNavigate }: { section: NavSection; onNavigate?: () => void }) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
 
@@ -55,6 +55,7 @@ function SidebarSection({ section }: { section: NavSection }) {
               <li key={item.href}>
                 <Link
                   href={item.href}
+                  onClick={onNavigate}
                   aria-current={active ? "page" : undefined}
                   style={{
                     display: "block",
@@ -158,10 +159,9 @@ export function MobileSidebar({ sections }: SidebarProps) {
             padding: "0.75rem 0",
             marginTop: "0.5rem",
           }}
-          onClick={() => setOpen(false)}
         >
           {sections.map((section) => (
-            <SidebarSection key={section.title} section={section} />
+            <SidebarSection key={section.title} section={section} onNavigate={() => setOpen(false)} />
           ))}
         </div>
       )}
