@@ -67,7 +67,7 @@ export default function PayloadsIndexPage() {
 
         {/* Category grid */}
         {PAYLOAD_CATEGORIES.map((cat) => (
-          <section key={cat.slug} style={{ marginBottom: "2.5rem" }}>
+          <section key={cat.slug} id={cat.slug} style={{ marginBottom: "2.5rem" }}>
             <h2
               style={{
                 fontSize: "0.75rem",
