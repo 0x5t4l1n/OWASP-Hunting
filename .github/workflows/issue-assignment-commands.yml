@@ -16,7 +16,7 @@ jobs:
     name: Handle self-assignment commands
     if: >-
       github.event.issue.pull_request == null &&
-      contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.comment.author_association) &&
+      (github.event.comment.body == '/take-pr' || github.event.comment.body == '/remove-pr') &&
       github.event.sender.type != 'Bot'
     runs-on: ubuntu-latest
     timeout-minutes: 5
